@@ -16,7 +16,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <PackageOutputPath>nupkgs</PackageOutputPath>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)$(SolutionName).snk</AssemblyOriginatorKeyFile>
     <CodeAnalysisRuleSet>$(SolutionDir).ruleset</CodeAnalysisRuleSet>
     <NoWarn>CS1591;NETSDK1138</NoWarn>
   </PropertyGroup>
@@ -31,10 +30,6 @@
     </AdditionalFiles>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

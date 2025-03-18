@@ -25,6 +25,29 @@ public class CollectionTests
     }
 
     [Fact]
+    public async Task TestCollisions()
+    {
+        const int seriesCount = 77163;
+        string output = await CollectionTestHelper.CollectAsync(factory => {
+            var counter = factory.CreateCounter("test", "with help text", ("label1", "label2"));
+
+            ulong c = 0;
+            string GetNextUniqueString()
+            {
+                return c++.ToString();
+            }
+
+            for (int i = 0; i < seriesCount; i++)
+            {
+                counter.WithLabels((GetNextUniqueString(), GetNextUniqueString())).Inc(5.5);
+            }
+        });
+
+        // Name + description + 1_000_000 samples + 1 empty line
+        Assert.Equal(seriesCount + 3, output.Split('\n').Length);
+    }
+
+    [Fact]
     public Task Collection()
     {
         return CollectionTestHelper.TestCollectionAsync(factory => {

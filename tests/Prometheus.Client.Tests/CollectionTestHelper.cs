@@ -10,7 +10,7 @@ namespace Prometheus.Client.Tests;
 
 internal static class CollectionTestHelper
 {
-    public static async Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
+    public static async Task<string> CollectAsync(Action<IMetricFactory> metricsSetup)
     {
         var registry = new CollectorRegistry();
         var factory = new MetricFactory(registry);
@@ -35,6 +35,13 @@ internal static class CollectionTestHelper
                 formattedText = await streamReader.ReadToEndAsync();
             }
         }
+
+        return formattedText;
+    }
+
+    public static async Task TestCollectionAsync(Action<IMetricFactory> metricsSetup, string resourceName)
+    {
+        var formattedText = await CollectAsync(metricsSetup);
 
         Assert.Equal(GetFileContent(resourceName), formattedText);
     }

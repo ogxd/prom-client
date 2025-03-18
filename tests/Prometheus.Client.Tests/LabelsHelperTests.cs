@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Prometheus.Client.Tests;
@@ -293,5 +294,46 @@ public class LabelsHelperTests
         var hash2 = LabelsHelper.GetHashCode(("b", string.Empty ));
 
         Assert.NotEqual(hash1, hash2);
+    }
+
+    [Fact]
+    public void GetHashCodeCollisions()
+    {
+        ulong counter = 0;
+        string GetNextUniqueString()
+        {
+            return counter++.ToString();
+        }
+
+        HashSet<int> hashes = new();
+
+        for (int i = 0; i < 1_000_000; i++)
+        {
+            int hash = LabelsHelper.GetHashCode((GetNextUniqueString(), GetNextUniqueString()));
+
+            Assert.True(hashes.Add(hash), $"Collision at {i}");
+        }
+    }
+
+    [Fact]
+    public void GetHashCodeCollisions64()
+    {
+        ulong counter = 0;
+        string GetNextUniqueString()
+        {
+            return counter++.ToString();
+        }
+
+        HashSet<(int, int)> hashes = new();
+
+        for (int i = 0; i < 1_000_000; i++)
+        {
+            string a = GetNextUniqueString();
+            string b = GetNextUniqueString();
+            int hash1 = LabelsHelper.GetHashCode((a, b), 0);
+            int hash2 = LabelsHelper.GetHashCode((a, b), 42);
+
+            Assert.True(hashes.Add((hash1, hash2)), $"Collision at {i}");
+        }
     }
 }
